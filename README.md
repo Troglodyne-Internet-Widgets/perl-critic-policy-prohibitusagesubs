@@ -9,16 +9,15 @@ version 1.000
 # Perl::Critic::Policy::ProhibitUsageSubs
 
 A hand-rolled `usage()` is a second copy of the script's interface, kept in
-step with the POD and with `GetOptions` by hope alone:
+step with the POD and with `GetOptions` by faith alone:
 
 ```perl
 sub usage {
-    return "Usage: $0 [--name NAME] DOMAIN\n";
+    return "Usage: $0 [--arg NAME] ...\n";
 }
-die usage() unless $domain;
+die usage() unless $condition;
 ```
 
-Three places now say what the options are, and nothing checks that they agree.
 Whichever the reader finds first is the one they believe, and it is reliably
 the one that stopped being true two commits ago.
 
@@ -33,7 +32,7 @@ Write it in POD, where `perldoc` and the man page find it too, and let
 =cut
 
 pod2usage( -exitval => 2, -verbose => 1, -input => __FILE__,
-           -message => 'No domain passed' ) unless $domain;
+           -message => q{There's a snake in my boot} ) unless $condition;
 ```
 
 ## PROHIBITED
@@ -43,6 +42,7 @@ sub usage         { ... }
 sub _usage        { ... }
 sub print_usage   { ... }
 sub usage_message { ... }
+sub help          { ... }
 ```
 
 ## ALLOWED
@@ -55,11 +55,11 @@ elsewhere.  It is writing your own that this is about.
 - `sub_names`
 
     Space separated list of subroutine names to complain about.  Defaults to
-    `usage _usage print_usage usage_message`.
+    `usage _usage print_usage usage_message help`.
 
     ```perl
     [ProhibitUsageSubs]
-    sub_names = usage _usage help
+    sub_names = halp what huh kerblammo
     ```
 
 ## CAVEATS
