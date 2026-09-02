@@ -17,14 +17,13 @@ use parent              qw{Perl::Critic::Policy};
 =head1 Perl::Critic::Policy::ProhibitUsageSubs
 
 A hand-rolled C<usage()> is a second copy of the script's interface, kept in
-step with the POD and with C<GetOptions> by hope alone:
+step with the POD and with C<GetOptions> by faith alone:
 
     sub usage {
-        return "Usage: $0 [--name NAME] DOMAIN\n";
+        return "Usage: $0 [--arg NAME] ...\n";
     }
-    die usage() unless $domain;
+    die usage() unless $condition;
 
-Three places now say what the options are, and nothing checks that they agree.
 Whichever the reader finds first is the one they believe, and it is reliably
 the one that stopped being true two commits ago.
 
@@ -38,7 +37,7 @@ L<Pod::Usage> print that:
     =cut
 
     pod2usage( -exitval => 2, -verbose => 1, -input => __FILE__,
-               -message => 'No domain passed' ) unless $domain;
+               -message => q{There's a snake in my boot} ) unless $condition;
 
 =head2 PROHIBITED
 
@@ -46,6 +45,7 @@ L<Pod::Usage> print that:
     sub _usage        { ... }
     sub print_usage   { ... }
     sub usage_message { ... }
+    sub help          { ... }
 
 =head2 ALLOWED
 
@@ -59,10 +59,10 @@ elsewhere.  It is writing your own that this is about.
 =item C<sub_names>
 
 Space separated list of subroutine names to complain about.  Defaults to
-C<usage _usage print_usage usage_message>.
+C<usage _usage print_usage usage_message help>.
 
     [ProhibitUsageSubs]
-    sub_names = usage _usage help
+    sub_names = halp what huh kerblammo
 
 =back
 
@@ -75,7 +75,7 @@ in the source.
 
 =cut
 
-Readonly::Scalar my $DESC => q{usage() duplicates documentation that belongs in POD};
+Readonly::Scalar my $DESC => q{usage() subs duplicate documentation that belongs in POD};
 Readonly::Scalar my $EXPL => q{Document the interface in POD and print it with Pod::Usage::pod2usage()};
 
 =head2 METHODS
@@ -102,7 +102,7 @@ sub supported_parameters {
     return ({
         name           => 'sub_names',
         description    => 'Subroutine names that should be POD instead.',
-        default_string => 'usage _usage print_usage usage_message',
+        default_string => 'usage _usage print_usage usage_message help',
         behavior       => 'string list',
     });
 }
