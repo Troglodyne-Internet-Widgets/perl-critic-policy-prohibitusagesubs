@@ -99,12 +99,14 @@ PPI::Statement::Sub
 =cut
 
 sub supported_parameters {
-    return ({
-        name           => 'sub_names',
-        description    => 'Subroutine names that should be POD instead.',
-        default_string => 'usage _usage print_usage usage_message help',
-        behavior       => 'string list',
-    });
+    return (
+        {
+            name           => 'sub_names',
+            description    => 'Subroutine names that should be POD instead.',
+            default_string => 'usage _usage print_usage usage_message help',
+            behavior       => 'string list',
+        }
+    );
 }
 
 sub default_severity { return $SEVERITY_MEDIUM }

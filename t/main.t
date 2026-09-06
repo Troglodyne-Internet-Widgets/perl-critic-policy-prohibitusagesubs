@@ -36,14 +36,14 @@ foreach my $case ( sort keys %prohibited ) {
 }
 
 my %allowed = (
-    'calling pod2usage'    => q{pod2usage( -exitval => 2, -verbose => 1 );},
-    'importing one'        => q{use Pod::Usage qw{pod2usage};},
-    'a forward decl'       => q{sub usage;},
-    'an unrelated sub'     => q{sub main { return 0 }},
-    'usage in a name'      => q{sub usage_of_the_disk { return 42 }},
-    'a method call'        => q{$self->usage();},
-    'a hash key'           => q{my %h = ( usage => 'nope' );},
-    'an anonymous sub'     => q{my $usage = sub { return 'nope' };},
+    'calling pod2usage' => q{pod2usage( -exitval => 2, -verbose => 1 );},
+    'importing one'     => q{use Pod::Usage qw{pod2usage};},
+    'a forward decl'    => q{sub usage;},
+    'an unrelated sub'  => q{sub main { return 0 }},
+    'usage in a name'   => q{sub usage_of_the_disk { return 42 }},
+    'a method call'     => q{$self->usage();},
+    'a hash key'        => q{my %h = ( usage => 'nope' );},
+    'an anonymous sub'  => q{my $usage = sub { return 'nope' };},
 );
 
 foreach my $case ( sort keys %allowed ) {
@@ -60,10 +60,14 @@ is( violations(q{sub usage { return 'x' }  ## no critic (ProhibitUsageSubs)}), 0
         -severity        => 1,
     );
 
-    is( scalar $configured->critique( \"use strict;\nsub help { return 'x' }\n" ),
-        1, 'a configured name is a violation' );
-    is( scalar $configured->critique( \"use strict;\nsub usage { return 'x' }\n" ),
-        0, 'and one left out of the list is not' );
+    is(
+        scalar $configured->critique( \"use strict;\nsub help { return 'x' }\n" ),
+        1, 'a configured name is a violation'
+    );
+    is(
+        scalar $configured->critique( \"use strict;\nsub usage { return 'x' }\n" ),
+        0, 'and one left out of the list is not'
+    );
 }
 
 done_testing();
