@@ -3,12 +3,13 @@ package Perl::Critic::Policy::ProhibitUsageSubs;
 # ABSTRACT: Document the interface once, in POD, and let Pod::Usage print it.
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 
 use 5.014;
 
 use re '/aa';
 
+no autovivification;
 use Readonly;
 
 use Perl::Critic::Utils qw{ :severities :classification :ppi };
@@ -131,7 +132,7 @@ sub violates {
     return if !defined $name;
 
     # Fully qualified names count too; it is the last segment that matters.
-    $name =~ s/\A .* :://xms;
+    $name =~ s/\A .* :://xs;
     return if !$self->{_sub_names}{$name};
 
     return $self->violation( $DESC, $EXPL, $elem );
